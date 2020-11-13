@@ -1,0 +1,411 @@
+CREATE SEQUENCE public.otherproduct_id_other_product_seq;
+
+CREATE TABLE public.OtherProduct (
+                id_other_product VARCHAR NOT NULL DEFAULT nextval('public.otherproduct_id_other_product_seq'),
+                category VARCHAR NOT NULL,
+                name_other_product VARCHAR NOT NULL,
+                url_picture VARCHAR,
+                CONSTRAINT id_otherproduct PRIMARY KEY (id_other_product)
+);
+
+
+ALTER SEQUENCE public.otherproduct_id_other_product_seq OWNED BY public.OtherProduct.id_other_product;
+
+CREATE SEQUENCE public.payement_method_id_payement_method_seq;
+
+CREATE TABLE public.Payement_method (
+                id_payement_method VARCHAR NOT NULL DEFAULT nextval('public.payement_method_id_payement_method_seq'),
+                type_payement_method VARCHAR NOT NULL,
+                CONSTRAINT id_payement_method PRIMARY KEY (id_payement_method)
+);
+
+
+ALTER SEQUENCE public.payement_method_id_payement_method_seq OWNED BY public.Payement_method.id_payement_method;
+
+CREATE SEQUENCE public.address_id_address_seq;
+
+CREATE TABLE public.Address (
+                id_address VARCHAR NOT NULL DEFAULT nextval('public.address_id_address_seq'),
+                number_of_way INTEGER NOT NULL,
+                way VARCHAR NOT NULL,
+                post_code INTEGER NOT NULL,
+                town VARCHAR NOT NULL,
+                additional_address VARCHAR,
+                CONSTRAINT id_address PRIMARY KEY (id_address)
+);
+
+
+ALTER SEQUENCE public.address_id_address_seq OWNED BY public.Address.id_address;
+
+CREATE SEQUENCE public.user_app_id_user_seq;
+
+CREATE TABLE public.User_app (
+                id_user VARCHAR NOT NULL DEFAULT nextval('public.user_app_id_user_seq'),
+                name_user VARCHAR NOT NULL,
+                email_user VARCHAR NOT NULL,
+                pasword VARCHAR NOT NULL,
+                phone VARCHAR NOT NULL,
+                CONSTRAINT id_user PRIMARY KEY (id_user)
+);
+
+
+ALTER SEQUENCE public.user_app_id_user_seq OWNED BY public.User_app.id_user;
+
+CREATE UNIQUE INDEX user_unique_email
+ ON public.User_app
+ ( email_user );
+
+CREATE SEQUENCE public.promo_code_id_promo_code_seq;
+
+CREATE TABLE public.Promo_code (
+                id_promo_code VARCHAR NOT NULL DEFAULT nextval('public.promo_code_id_promo_code_seq'),
+                name_promo_code VARCHAR NOT NULL,
+                amount REAL NOT NULL,
+                CONSTRAINT id_promo_code PRIMARY KEY (id_promo_code)
+);
+
+
+ALTER SEQUENCE public.promo_code_id_promo_code_seq OWNED BY public.Promo_code.id_promo_code;
+
+CREATE SEQUENCE public.recipe_id_recipe_seq;
+
+CREATE TABLE public.Recipe (
+                id_recipe VARCHAR NOT NULL DEFAULT nextval('public.recipe_id_recipe_seq'),
+                recipe_name VARCHAR NOT NULL,
+                CONSTRAINT idrecipe PRIMARY KEY (id_recipe)
+);
+
+
+ALTER SEQUENCE public.recipe_id_recipe_seq OWNED BY public.Recipe.id_recipe;
+
+CREATE SEQUENCE public.step_id_step_seq;
+
+CREATE TABLE public.Step (
+                id_step VARCHAR NOT NULL DEFAULT nextval('public.step_id_step_seq'),
+                step_description VARCHAR NOT NULL,
+                step_number VARCHAR NOT NULL,
+                id_recipe VARCHAR NOT NULL,
+                CONSTRAINT idstep PRIMARY KEY (id_step)
+);
+
+
+ALTER SEQUENCE public.step_id_step_seq OWNED BY public.Step.id_step;
+
+CREATE SEQUENCE public.pizza_id_pizza_seq;
+
+CREATE TABLE public.Pizza (
+                id_pizza VARCHAR NOT NULL DEFAULT nextval('public.pizza_id_pizza_seq'),
+                name_pizza VARCHAR NOT NULL,
+                id_recipe VARCHAR NOT NULL,
+                url_picture VARCHAR,
+                CONSTRAINT idpizza PRIMARY KEY (id_pizza)
+);
+
+
+ALTER SEQUENCE public.pizza_id_pizza_seq OWNED BY public.Pizza.id_pizza;
+
+CREATE SEQUENCE public.customer_id_customer_seq;
+
+CREATE TABLE public.Customer (
+                id_customer VARCHAR NOT NULL DEFAULT nextval('public.customer_id_customer_seq'),
+                latitude REAL NOT NULL,
+                longitude REAL NOT NULL,
+                id_user VARCHAR NOT NULL,
+                id_address VARCHAR NOT NULL,
+                CONSTRAINT idcustomer PRIMARY KEY (id_customer)
+);
+
+
+ALTER SEQUENCE public.customer_id_customer_seq OWNED BY public.Customer.id_customer;
+
+CREATE SEQUENCE public.product_id_product_seq;
+
+CREATE TABLE public.Product (
+                id_product VARCHAR NOT NULL DEFAULT nextval('public.product_id_product_seq'),
+                type_product VARCHAR NOT NULL,
+                name_product VARCHAR NOT NULL,
+                CONSTRAINT idproduct PRIMARY KEY (id_product)
+);
+
+
+ALTER SEQUENCE public.product_id_product_seq OWNED BY public.Product.id_product;
+
+CREATE TABLE public.Recipe_product (
+                id_recipe VARCHAR NOT NULL,
+                id_product VARCHAR NOT NULL,
+                quantity INTEGER NOT NULL,
+                CONSTRAINT id_recipe_product PRIMARY KEY (id_recipe, id_product)
+);
+
+
+CREATE SEQUENCE public.point_of_sale_id_point_of_sale_seq;
+
+CREATE TABLE public.Point_of_sale (
+                id_point_of_sale VARCHAR NOT NULL DEFAULT nextval('public.point_of_sale_id_point_of_sale_seq'),
+                phone VARCHAR NOT NULL,
+                email VARCHAR NOT NULL,
+                longitude REAL NOT NULL,
+                latitude REAL NOT NULL,
+                id_address VARCHAR NOT NULL,
+                delivery_scope INTEGER NOT NULL,
+                CONSTRAINT id_point_of_sale PRIMARY KEY (id_point_of_sale)
+);
+
+
+ALTER SEQUENCE public.point_of_sale_id_point_of_sale_seq OWNED BY public.Point_of_sale.id_point_of_sale;
+
+CREATE TABLE public.Other_product_point_of_sale (
+                id_other_product VARCHAR NOT NULL,
+                id_point_of_sale VARCHAR NOT NULL,
+                price REAL NOT NULL,
+                CONSTRAINT other_product_point_of_sale_pk PRIMARY KEY (id_other_product, id_point_of_sale)
+);
+
+
+CREATE TABLE public.Shopping_basket (
+                id_shopping_basket VARCHAR NOT NULL,
+                id_pizza VARCHAR,
+                id_customer VARCHAR NOT NULL,
+                quantity INTEGER NOT NULL,
+                id_point_of_sale VARCHAR NOT NULL,
+                order_validate BOOLEAN DEFAULT FALSE NOT NULL,
+                id_other_product VARCHAR,
+                CONSTRAINT id_shopping_basket PRIMARY KEY (id_shopping_basket)
+);
+
+
+CREATE TABLE public.Pizza_point_of_sale (
+                id_pizza VARCHAR NOT NULL,
+                id_point_of_sale VARCHAR NOT NULL,
+                note REAL NOT NULL,
+                price REAL NOT NULL,
+                id_promo_code VARCHAR,
+                CONSTRAINT id_pizza_point_of_sale PRIMARY KEY (id_pizza, id_point_of_sale)
+);
+
+
+CREATE TABLE public.Stock (
+                id_point_of_sale VARCHAR NOT NULL,
+                id_product VARCHAR NOT NULL,
+                dlc DATE NOT NULL,
+                quantity INTEGER NOT NULL,
+                CONSTRAINT idstock PRIMARY KEY (id_point_of_sale, id_product)
+);
+
+
+CREATE SEQUENCE public.worker_id_worker_seq;
+
+CREATE TABLE public.Worker (
+                id_worker VARCHAR NOT NULL DEFAULT nextval('public.worker_id_worker_seq'),
+                id_point_of_sale VARCHAR,
+                type_worker VARCHAR NOT NULL,
+                id_user VARCHAR NOT NULL,
+                CONSTRAINT idworker PRIMARY KEY (id_worker)
+);
+
+
+ALTER SEQUENCE public.worker_id_worker_seq OWNED BY public.Worker.id_worker;
+
+CREATE SEQUENCE public.customer_order_id_customer_order_seq;
+
+CREATE TABLE public.Customer_order (
+                id_customer_order VARCHAR NOT NULL DEFAULT nextval('public.customer_order_id_customer_order_seq'),
+                current_state VARCHAR NOT NULL,
+                id_pizzaiolo VARCHAR,
+                id_delivery_man VARCHAR,
+                id_shopping_basket VARCHAR NOT NULL,
+                delivery BOOLEAN NOT NULL,
+                CONSTRAINT id_customer_order PRIMARY KEY (id_customer_order)
+);
+
+
+ALTER SEQUENCE public.customer_order_id_customer_order_seq OWNED BY public.Customer_order.id_customer_order;
+
+CREATE SEQUENCE public.receipt_idreceipt_seq;
+
+CREATE TABLE public.Receipt (
+                idReceipt VARCHAR NOT NULL DEFAULT nextval('public.receipt_idreceipt_seq'),
+                dateOfOrder DATE NOT NULL,
+                id_payement_method VARCHAR NOT NULL,
+                id_customer_order VARCHAR NOT NULL,
+                finalPrice REAL NOT NULL,
+                CONSTRAINT idreceipt PRIMARY KEY (idReceipt)
+);
+
+
+ALTER SEQUENCE public.receipt_idreceipt_seq OWNED BY public.Receipt.idReceipt;
+
+ALTER TABLE public.Other_product_point_of_sale ADD CONSTRAINT otherproduct_other_product_point_of_sale_fk
+FOREIGN KEY (id_other_product)
+REFERENCES public.OtherProduct (id_other_product)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Shopping_basket ADD CONSTRAINT otherproduct_shopping_basket_fk
+FOREIGN KEY (id_other_product)
+REFERENCES public.OtherProduct (id_other_product)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Receipt ADD CONSTRAINT payement_method_receipt_fk
+FOREIGN KEY (id_payement_method)
+REFERENCES public.Payement_method (id_payement_method)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Point_of_sale ADD CONSTRAINT address_point_of_sale_fk
+FOREIGN KEY (id_address)
+REFERENCES public.Address (id_address)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Customer ADD CONSTRAINT address_customer_fk
+FOREIGN KEY (id_address)
+REFERENCES public.Address (id_address)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Customer ADD CONSTRAINT user_customer_fk
+FOREIGN KEY (id_user)
+REFERENCES public.User_app (id_user)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.Worker ADD CONSTRAINT user_worker_fk
+FOREIGN KEY (id_user)
+REFERENCES public.User_app (id_user)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Pizza_point_of_sale ADD CONSTRAINT promocode_pizzapointofsale_fk
+FOREIGN KEY (id_promo_code)
+REFERENCES public.Promo_code (id_promo_code)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Pizza ADD CONSTRAINT recette_pizza_fk
+FOREIGN KEY (id_recipe)
+REFERENCES public.Recipe (id_recipe)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Step ADD CONSTRAINT recette_step_fk
+FOREIGN KEY (id_recipe)
+REFERENCES public.Recipe (id_recipe)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Recipe_product ADD CONSTRAINT recipe_recipeproduct_fk
+FOREIGN KEY (id_recipe)
+REFERENCES public.Recipe (id_recipe)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Pizza_point_of_sale ADD CONSTRAINT pizza_pizzapointofsale_fk
+FOREIGN KEY (id_pizza)
+REFERENCES public.Pizza (id_pizza)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Shopping_basket ADD CONSTRAINT pizza_pizzaorder_fk
+FOREIGN KEY (id_pizza)
+REFERENCES public.Pizza (id_pizza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Shopping_basket ADD CONSTRAINT customer_pizza_order_fk
+FOREIGN KEY (id_customer)
+REFERENCES public.Customer (id_customer)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Stock ADD CONSTRAINT produit_stock_fk
+FOREIGN KEY (id_product)
+REFERENCES public.Product (id_product)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Recipe_product ADD CONSTRAINT product_recipeproduct_fk
+FOREIGN KEY (id_product)
+REFERENCES public.Product (id_product)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Worker ADD CONSTRAINT point_of_sale_worker_fk
+FOREIGN KEY (id_point_of_sale)
+REFERENCES public.Point_of_sale (id_point_of_sale)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Stock ADD CONSTRAINT pointdevente_stock_fk
+FOREIGN KEY (id_point_of_sale)
+REFERENCES public.Point_of_sale (id_point_of_sale)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Pizza_point_of_sale ADD CONSTRAINT pointofsale_pizzapointofsale_fk
+FOREIGN KEY (id_point_of_sale)
+REFERENCES public.Point_of_sale (id_point_of_sale)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Shopping_basket ADD CONSTRAINT point_of_sale_pizza_order_fk
+FOREIGN KEY (id_point_of_sale)
+REFERENCES public.Point_of_sale (id_point_of_sale)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Other_product_point_of_sale ADD CONSTRAINT point_of_sale_other_product_point_of_sale_fk
+FOREIGN KEY (id_point_of_sale)
+REFERENCES public.Point_of_sale (id_point_of_sale)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Customer_order ADD CONSTRAINT pizza_order_customer_order_fk
+FOREIGN KEY (id_shopping_basket)
+REFERENCES public.Shopping_basket (id_shopping_basket)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Customer_order ADD CONSTRAINT worker_order_fk
+FOREIGN KEY (id_pizzaiolo)
+REFERENCES public.Worker (id_worker)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Customer_order ADD CONSTRAINT worker_order_fk1
+FOREIGN KEY (id_delivery_man)
+REFERENCES public.Worker (id_worker)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Receipt ADD CONSTRAINT commande_facture_fk
+FOREIGN KEY (id_customer_order)
+REFERENCES public.Customer_order (id_customer_order)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
